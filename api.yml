@@ -1,0 +1,19 @@
+version: '3.3'
+
+name: python-api-compose
+
+services:
+  api:
+    image: python-api:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - "./src:/python-docker/api"
+      - "./files:/python-docker/files"
+    command: python3 /python-docker/api/api.py
+
+networks:
+  default:
+    external: true
+    name: api

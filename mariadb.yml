@@ -1,0 +1,22 @@
+version: '3.3'
+
+#name: mariadb-forum
+services:
+  sql:
+    image: mariadb:latest
+    restart: always
+    volumes:
+      - ./mariadb-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_USER: airboyforum
+      MARIADB_PASSWORD: admin
+      MARIADB_DATABASE: forumusers
+      MARIADB_RANDOM_ROOT_PASSWORD: tak
+      MARIADB_ROOT_HOST: localhost
+
+networks:
+  default:
+    external: true
+    name: api

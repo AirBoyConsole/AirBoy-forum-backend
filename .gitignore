@@ -1,0 +1,5 @@
+mariadb-data/
+mongodb-data/
+files/
+__pycache__/
+config.py
