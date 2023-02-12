@@ -35,6 +35,7 @@ Those endpoints are marked using the `*` in the table below.
 | /api/article/{id} | Error        | edit article* | get article           | delete article* |
 | /api/user         | add user     | Error         | list of all users     | Error           |
 | /api/user/{id}    | Error        | edit user*    | get user              | delete user*    |
+| /api/self		    | Error        | edit self*    | get self*             | delete self*    |
 | /files/{filename} | Error        | Error         | get file              | Error			 |
 | /login			| return JWT   | Error         | Error				   | Error			 |
 
@@ -391,3 +392,63 @@ HTTP `200`
 ```
 (file contents)
 ```
+
+
+#### Get self
+
+Requires a JWT.
+
+```
+GET /api/self
+```
+
+Response
+
+HTTP `200`
+
+```javascript
+{
+	"id": 1,
+	"username": "johndoe",
+	"email": "mail@example.com",
+	"privileges": "superadmin"
+}
+```
+
+
+#### Delete self
+
+Requires a JWT.
+
+```
+DELETE /api/self
+```
+
+Response
+
+HTTP `204`
+
+
+#### Update self
+
+Requires a JWT. 
+
+```
+PUT /api/self
+```
+
+Request body parameters (should be sent as form)
+
+
+| Name       | Type         | Required   | Comment					   |
+|------------|--------------|------------|-----------------------------|
+| username   | string       | no		 | len >= 3					   |
+| password   | string       | no		 | len >= 8 and in plain text  |
+| email      | string       | no		 |							   |
+
+
+Response
+
+HTTP `200`
+
+
