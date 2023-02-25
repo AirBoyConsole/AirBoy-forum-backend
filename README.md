@@ -472,4 +472,30 @@ URI parameters
 | order  | int			   | no       | descending order	   | 0			          |
 | search | string          | no       | search phrase          |                      |
 
+Response
 
+HTTP `200`
+
+```javascript
+[
+    {
+        "id": 0,
+        "title": "Mijakspad",
+        "content": "W Mijakspad mijak spada...",
+        "download_url": "/files/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.txt",	// url to file
+        "image_url": "/files/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.png",		// url to image
+        "added": "YYYY-MM-DDThh:mm:ssZ",								// iso 8601
+        "last_edit": "YYYY-MM-DDThh:mm:ssZ",
+        "author": {
+            "id": 1,
+            "username": "johndoe",
+			"privileges": "superadmin"
+        },
+        "tags": [
+            "mijak",
+            "spadanie"
+        ],
+        "views": 69
+    }
+]
+```
