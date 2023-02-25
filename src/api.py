@@ -3,7 +3,7 @@ from flask_restful import Api, Resource
 from flask_jwt_extended import JWTManager
 from waitress import serve
 
-from article import Articles, Article
+from article import Articles, Article, ArticlesByToken
 from user import Users, User, UserByToken
 from login import Login
 from files import Files
@@ -45,6 +45,7 @@ api.add_resource(Article, '/api/article/<article_id>')
 api.add_resource(Users, '/api/user')
 api.add_resource(User, '/api/user/<user_id>')
 api.add_resource(UserByToken, '/api/self/')
+api.add_resource(ArticlesByToken, '/api/self/article')
 api.add_resource(Files, '/api/files/<file_id>')
 api.add_resource(Login, '/api/login')
 

@@ -36,6 +36,7 @@ Those endpoints are marked using the `*` in the table below.
 | /api/user         | add user     | Error         | list of all users     | Error           |
 | /api/user/{id}    | Error        | edit user*    | get user              | delete user*    |
 | /api/self		    | Error        | edit self*    | get self*             | delete self*    |
+| /api/self/article | Error        | Error		   | get articles by self* | Error			 |
 | /files/{filename} | Error        | Error         | get file              | Error			 |
 | /login			| return JWT   | Error         | Error				   | Error			 |
 
@@ -60,7 +61,7 @@ SortArticleEnum
 | ID    | by id              | 
 
 
-#### Get list of vessels
+## Get list of vessels
 
 Returns full vessel list
 
@@ -109,7 +110,7 @@ HTTP `200`
 ```
 
 
-#### Add new article
+## Add new article
 
 Requires a JWT.
 
@@ -150,7 +151,7 @@ Response
 HTTP `200`
 
 
-#### Get article
+## Get article
 
 Get specific article by id
 
@@ -187,7 +188,7 @@ HTTP `200`
 ```
 
 
-#### Edit vessel data
+## Edit vessel data
 
 Update vessel data
 
@@ -214,7 +215,7 @@ Response
 HTTP `200`
 
 
-#### Remove article
+## Remove article
 
 Remove vessel totally
 
@@ -229,7 +230,7 @@ Response
 HTTP `204`
 
 
-#### Get list of users
+## Get list of users
 
 ```
 GET /api/user
@@ -271,7 +272,7 @@ HTTP `200`
 ```
 
 
-#### Add new user
+## Add new user
 
 ```
 POST /api/user
@@ -292,7 +293,7 @@ Response
 HTTP `200`
 
 
-#### Get user
+## Get user
 
 ```
 GET /api/user/{id}
@@ -311,7 +312,7 @@ HTTP `200`
 ```
 
 
-#### Delete user
+## Delete user
 
 Requires a JWT with the same identity as the author of the article or a higher level of privilege.
 
@@ -324,7 +325,7 @@ Response
 HTTP `204`
 
 
-#### Update user
+## Update user
 
 Requires a JWT with the same identity as the user of the article or a higher level of privilege. 
 (Only the user can change username, password and email)
@@ -349,7 +350,7 @@ Response
 HTTP `200`
 
 
-#### Login
+## Login
 
 Generate JWT given correct credentials
 
@@ -376,7 +377,7 @@ HTTP `200`
 ```
 
 
-#### Get file
+## Get file
 
 Returns a specific file
 
@@ -394,7 +395,7 @@ HTTP `200`
 ```
 
 
-#### Get self
+## Get self
 
 Requires a JWT.
 
@@ -416,7 +417,7 @@ HTTP `200`
 ```
 
 
-#### Delete self
+## Delete self
 
 Requires a JWT.
 
@@ -429,7 +430,7 @@ Response
 HTTP `204`
 
 
-#### Update self
+## Update self
 
 Requires a JWT. 
 
@@ -450,5 +451,25 @@ Request body parameters (should be sent as form)
 Response
 
 HTTP `200`
+
+
+## Get articles by self
+
+Requires a JWT.
+
+```
+GET /api/self/article
+```
+
+URI parameters
+
+
+| Name   | Type            | Required | Comment                | Default if not added |
+|--------|-----------------|----------|------------------------|----------------------|
+| limit  | int			   | no       | limit the response     | 20                   |
+| offset | int			   | no       | offset in the search   | 0	                  |
+| sortBy | SortArticleEnum | no       | changes sort method    | DATE                 |
+| order  | int			   | no       | descending order	   | 0			          |
+| search | string          | no       | search phrase          |                      |
 
 

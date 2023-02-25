@@ -1,4 +1,3 @@
-import json
 import os
 import datetime
 import uuid
@@ -243,7 +242,7 @@ class Article(Resource):
         if articles.count_documents({"_id": int(article_id)}) == 0:
             abort(404, message="Article with this ID does not exist: {}".format(article_id))
 
-        entry = articles.find({"_id": int(article_id)})[0];
+        entry = articles.find({"_id": int(article_id)})[0]
 
         user_id = int(get_jwt_identity())
 
@@ -312,3 +311,64 @@ class Article(Resource):
                 abort(400, message="Image extension not allowed: {}".format(image.filename.rsplit('.', 1)[1].lower()))
 
         articles.update_one({"_id": int(article_id)}, {"$set": newvals})
+
+
+class ArticlesByToken(Resource):
+    @jwt_required()
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('offset', type=int, location='args', default=0)
+        parser.add_argument('limit', type=int, location='args', default=20)
+        parser.add_argument('sort_by', location='args', default='DATE', choices=('NAME', 'ID', 'DATE', 'VIEWS'))
+        parser.add_argument('order', type=int, location='args', default=0, choices=(0, 1))
+        parser.add_argument('search', location='args', default='')
+        args = parser.parse_args()
+
+        user_id = int(get_jwt_identity())
+
+        result = execsql("select privileges+0 from users where id=%d", (user_id,))[0]
+        if result == []:
+            abort(400, message="The user of this token does not exist")
+
+        sortenum = {'NAME': 'title',
+                    'ID': 'id',
+                    'DATE': 'added',
+                    'VIEWS': 'views'}
+        orderenum = [1, -1]
+        # searchdict = {'$text': {'$search': '/'+args["search"]+'/'}}
+        # searchdict = {'title': {'$regex': args["search"]}, 'title': {'$regex': args["search"]}}
+        searchdict = {'$or': [{'title': {'$regex': args["search"]}}, {'content': {'$regex': args["search"]}}], 'author': user_id}
+        # userdict = {'author': user_id}
+
+        result = articles.find(searchdict).sort(sortenum[args["sort_by"]],orderenum[args["order"]]).skip(int(args['offset'])).limit(int(args['limit']))
+        json = []
+
+        for entry in result:
+            sql_result = execsql("select id,username,privileges from users where id="+str(entry["author"]))
+            if len(sql_result) > 0:
+                author_id = sql_result[0][0]
+                author_username = sql_result[0][1]
+                author_privileges = sql_result[0][2]
+            else:
+                author_id = 0
+                author_username = "<deleted>"
+                author_privileges = "regular"
+
+            json.append({
+                "id": entry["_id"],
+                "title": entry["title"],
+                "content": entry["content"],
+                "download_url": entry["download_url"],
+                "image_url": entry["image_url"],
+                "added": entry["added"].isoformat(),
+                "last_edit": entry["last_edit"].isoformat(),
+                "author": {
+                    "id": author_id,
+                    "username": author_username,
+                    "privileges": author_privileges
+                },
+                "tags": entry["tags"],
+                "views": entry["views"],
+            })
+
+        return json
