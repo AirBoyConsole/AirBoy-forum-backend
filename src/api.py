@@ -1,3 +1,4 @@
+import json
 from flask import Flask, request
 from flask_restful import Api, Resource
 from flask_jwt_extended import JWTManager
@@ -22,6 +23,11 @@ def after_request(response):
     return response
 
 
+@jwt.invalid_token_loader
+def invalid_token_callback(msg):
+    return json.dumps({"msg": msg}), 401
+
+
 class Test(Resource):
     def get(self):
         args = request.args
@@ -44,7 +50,7 @@ api.add_resource(Articles, '/api/article')
 api.add_resource(Article, '/api/article/<article_id>')
 api.add_resource(Users, '/api/user')
 api.add_resource(User, '/api/user/<user_id>')
-api.add_resource(UserByToken, '/api/self/')
+api.add_resource(UserByToken, '/api/self')
 api.add_resource(ArticlesByToken, '/api/self/article')
 api.add_resource(Files, '/api/files/<file_id>')
 api.add_resource(Login, '/api/login')

@@ -22,6 +22,7 @@ class Login(Resource):
             print(hash + ", " + result[0][2])
             abort(401, message="Incorrect password")
 
-        expires = datetime.timedelta(days=14)
+        expires = datetime.timedelta(hours=12)
+        # expires = datetime.timedelta(seconds=20)
         token = create_access_token(identity=str(result[0][0]), expires_delta=expires)
         return {"token": token}
