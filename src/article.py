@@ -160,6 +160,11 @@ class Articles(Resource):
 
 class Article(Resource):
     def get(self, article_id):
+        try:
+            int(article_id)
+        except:
+            abort(400, mesage="Bad article id: {}".format(article_id))
+
         if articles.count_documents({"_id": int(article_id)}) == 0:
             abort(404, message="Article with this ID does not exist: {}".format(article_id))
 
@@ -192,6 +197,11 @@ class Article(Resource):
 
     @jwt_required()
     def delete(self, article_id):
+        try:
+            int(article_id)
+        except:
+            abort(400, mesage="Bad article id: {}".format(article_id))
+
         if articles.count_documents({"_id": int(article_id)}) == 0:
             abort(404, message="Article with this ID does not exist: {}".format(article_id))
 
@@ -239,6 +249,12 @@ class Article(Resource):
         parser.add_argument('tags', location='form', action='append')
         args = parser.parse_args()
 
+        try:
+            int(article_id)
+        except:
+            abort(400, mesage="Bad article id: {}".format(article_id))
+
+
         if articles.count_documents({"_id": int(article_id)}) == 0:
             abort(404, message="Article with this ID does not exist: {}".format(article_id))
 
@@ -257,10 +273,6 @@ class Article(Resource):
             authorpriv = sqlresult[0]
 
         if user_id != int(entry["author"]) and int(result[0]) <= int(authorpriv):
-            #print("user_id: "+str(user_id))
-            #print("author: "+str(entry["author"]))
-            #print("priv: "+str(result[0]))
-            #print("authorpriv: "+str(authorpriv))
             abort(403, message="You do not have privilege for this action")
 
         newvals = {'last_edit': datetime.datetime.utcnow()}

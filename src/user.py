@@ -58,6 +58,10 @@ class Users(Resource):
 
 class User(Resource):
     def get(self, user_id):
+        try:
+            int(user_id)
+        except:
+            abort(400, mesage="This user id is not an integer: {}".format(user_id))
 
         result = execsql("select id,username,email,privileges from users where id=%d", (int(user_id),))
         if result == [] or user_id == 0:
@@ -74,6 +78,10 @@ class User(Resource):
 
     @jwt_required()
     def delete(self, user_id):
+        try:
+            int(user_id)
+        except:
+            abort(400, mesage="This user id is not an integer: {}".format(user_id))
 
         result = execsql("select id,username,email,privileges+0 from users where id=%d", (int(user_id),))
         if result == [] or user_id == 0:
@@ -101,6 +109,11 @@ class User(Resource):
         parser.add_argument('email', location='form')
         parser.add_argument('privileges', type=int, location='form', default=0, choices=(1,2,3))
         args = parser.parse_args()
+
+        try:
+            int(user_id)
+        except:
+            abort(400, mesage="This user id is not an integer: {}".format(user_id))
 
         result = execsql("select id,username,salt,hash,email,privileges+0 from users where id=%d", (int(user_id),))
         if result == [] or user_id == 0:
