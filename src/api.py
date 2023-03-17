@@ -28,24 +28,6 @@ def invalid_token_callback(msg):
     return json.dumps({"msg": msg}), 401
 
 
-class Test(Resource):
-    def get(self):
-        args = request.args
-        return args
-
-    def post(self):
-        args = request.form
-        return args
-
-    def delete(self):
-        args = request.args
-        return args
-
-    def put(self):
-        args = request.form
-        return args
-
-
 api.add_resource(Articles, '/api/article')
 api.add_resource(Article, '/api/article/<article_id>')
 api.add_resource(Users, '/api/user')
